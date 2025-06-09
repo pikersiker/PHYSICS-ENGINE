@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         Engine engine = new Engine();
 
-        JFrame frame = new JFrame("2D physics engine");
+        JFrame frame = new JFrame("2D physics engine ('r' to reset)");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Panel panel = new Panel(engine);
