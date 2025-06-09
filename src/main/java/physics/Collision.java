@@ -9,8 +9,8 @@ public class Collision {
         float min = verts[0].dot(axis), max = min;
         for (int i = 1; i < verts.length; i++) {
             float p = verts[i].dot(axis);
-            if (p < min) min = p;
-            if (p > max) max = p;
+            min = Math.min(min, p);
+            max = Math.max(max, p);
         }
         return new float[]{min, max};
     }
@@ -28,7 +28,7 @@ public class Collision {
         for (int i = 0; i < verts.length; i++) {
             Vector2f edge = new Vector2f(verts[(i + 1) % verts.length]).sub(verts[i]);
             //noinspection SuspiciousNameCombination
-            normals[i] = new Vector2f(edge.y, -edge.x).normalize();
+            normals[i] = new Vector2f(edge.y, -edge.x).normalize();  // perpendicular vector
         }
         return normals;
     }
@@ -46,38 +46,40 @@ public class Collision {
     }
 
     public static SATResult test(Entity a, Entity b) {
-        Vector2f[] vA = a.obb.getVertices();
-        Vector2f[] vB = b.obb.getVertices();
+        Vector2f[] vertsA = a.obb.getVertices();
+        Vector2f[] vertsB = b.obb.getVertices();
 
-        Vector2f[] axes = new Vector2f[vA.length + vB.length];
-        System.arraycopy(getNormals(vA), 0, axes, 0, vA.length);
-        System.arraycopy(getNormals(vB), 0, axes, vA.length, vB.length);
+        Vector2f[] axes = new Vector2f[vertsA.length + vertsB.length];
+        System.arraycopy(getNormals(vertsA), 0, axes, 0, vertsA.length);
+        System.arraycopy(getNormals(vertsB), 0, axes, vertsA.length, vertsB.length);
 
         float minOverlap = Float.MAX_VALUE;
         Vector2f smallestAxis = null;
 
         for (Vector2f axis : axes) {
-            float[] pA = project(vA, axis);
-            float[] pB = project(vB, axis);
+            float[] projA = project(vertsA, axis);
+            float[] projB = project(vertsB, axis);
 
-            if (!overlaps(pA[0], pA[1], pB[0], pB[1])) {
+            if (!overlaps(projA[0], projA[1], projB[0], projB[1])) {
                 return new SATResult(false, null, 0);
             }
 
-            float o = getOverlap(pA[0], pA[1], pB[0], pB[1]);
-            if (o < minOverlap) {
-                minOverlap = o;
+            float overlap = getOverlap(projA[0], projA[1], projB[0], projB[1]);
+            if (overlap < minOverlap) {
+                minOverlap = overlap;
                 smallestAxis = new Vector2f(axis);
             }
         }
 
-        Vector2f dir = new Vector2f(b.rigidBody.getPosition()).sub(a.rigidBody.getPosition());
-        if (dir.dot(smallestAxis) < 0) {
-            assert smallestAxis != null;
+        if (smallestAxis == null) {
+            return new SATResult(false, null, 0);
+        }
+
+        Vector2f direction = new Vector2f(b.rigidBody.getPosition()).sub(a.rigidBody.getPosition());
+        if (direction.dot(smallestAxis) < 0) {
             smallestAxis.negate();
         }
 
-        assert smallestAxis != null;
         return new SATResult(true, smallestAxis.normalize(), minOverlap);
     }
 }
