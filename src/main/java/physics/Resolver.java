@@ -13,18 +13,14 @@ public class Resolver {
 
         if (A.isStatic() && B.isStatic()) return;
 
-        // Compute relative velocity
         Vector2f rv = new Vector2f(B.getVelocity()).sub(A.getVelocity());
 
-        // Relative velocity along the normal
         float velAlongNormal = rv.dot(sat.axis);
 
-        // Do not resolve if velocities are separating
         if (velAlongNormal > 0) return;
 
         float e = Math.min(A.getRestitution(), B.getRestitution());
 
-        // Calculate impulse scalar
         float invMassA = A.isStatic() ? 0f : 1f / A.getMass();
         float invMassB = B.isStatic() ? 0f : 1f / B.getMass();
         float j = -(1 + e) * velAlongNormal;
@@ -34,12 +30,10 @@ public class Resolver {
 
         j /= invMassSum;
 
-        // Apply impulse
         Vector2f impulse = new Vector2f(sat.axis).mul(j);
         if (!A.isStatic()) A.setVelocity(new Vector2f(A.getVelocity()).sub(new Vector2f(impulse).mul(invMassA)));
         if (!B.isStatic()) B.setVelocity(new Vector2f(B.getVelocity()).add(new Vector2f(impulse).mul(invMassB)));
 
-        // Friction
         Vector2f tangent = new Vector2f(rv).sub(new Vector2f(sat.axis).mul(rv.dot(sat.axis)));
         if (tangent.lengthSquared() != 0) tangent.normalize();
 
@@ -56,7 +50,6 @@ public class Resolver {
         if (!A.isStatic()) A.setVelocity(new Vector2f(A.getVelocity()).sub(new Vector2f(frictionImpulse).mul(invMassA)));
         if (!B.isStatic()) B.setVelocity(new Vector2f(B.getVelocity()).add(new Vector2f(frictionImpulse).mul(invMassB)));
 
-        // Positional correction
         final float percent = 0.6f;
         final float slop = 0.01f;
         float correctionMag = Math.max(sat.overlap - slop, 0.0f) / invMassSum;

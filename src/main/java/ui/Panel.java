@@ -2,19 +2,12 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.*;
 
 import object.Entity;
 import org.joml.Vector2f;
 
 public class Panel extends JPanel {
-    private final float SIM_WIDTH = 800f;
-    private final float SIM_HEIGHT = 600f;
     private float uniformScale;
     private int offsetX;
     private int offsetY;
@@ -45,18 +38,21 @@ public class Panel extends JPanel {
                 repaint();
             }
         });
-    }
 
-    private int simToScreenX(float x) {
-        return Math.round(x * getWidth() / (float) SIM_WIDTH);
-    }
-
-    private int simToScreenY(float y) {
-        return Math.round(y * getHeight() / (float) SIM_HEIGHT);
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("R"), "resetEntities");
+        getActionMap().put("resetEntities", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.clearDynamicEntities();
+                repaint();
+            }
+        });
     }
 
     private void updateScaling() {
+        float SIM_WIDTH = 800f;
         float scaleX = getWidth() / SIM_WIDTH;
+        float SIM_HEIGHT = 600f;
         float scaleY = getHeight() / SIM_HEIGHT;
         uniformScale = Math.min(scaleX, scaleY);
         offsetX = (int) ((getWidth() - (SIM_WIDTH * uniformScale)) / 2);

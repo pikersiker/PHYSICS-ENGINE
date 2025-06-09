@@ -27,12 +27,12 @@ public class Collision {
         Vector2f[] normals = new Vector2f[verts.length];
         for (int i = 0; i < verts.length; i++) {
             Vector2f edge = new Vector2f(verts[(i + 1) % verts.length]).sub(verts[i]);
+            //noinspection SuspiciousNameCombination
             normals[i] = new Vector2f(edge.y, -edge.x).normalize();
         }
         return normals;
     }
 
-    // Result for collision test
     public static class SATResult {
         public final boolean collision;
         public final Vector2f axis;
@@ -45,7 +45,6 @@ public class Collision {
         }
     }
 
-    // SAT collision test between two Entities
     public static SATResult test(Entity a, Entity b) {
         Vector2f[] vA = a.obb.getVertices();
         Vector2f[] vB = b.obb.getVertices();
@@ -73,8 +72,12 @@ public class Collision {
         }
 
         Vector2f dir = new Vector2f(b.rigidBody.getPosition()).sub(a.rigidBody.getPosition());
-        if (dir.dot(smallestAxis) < 0) smallestAxis.negate();
+        if (dir.dot(smallestAxis) < 0) {
+            assert smallestAxis != null;
+            smallestAxis.negate();
+        }
 
+        assert smallestAxis != null;
         return new SATResult(true, smallestAxis.normalize(), minOverlap);
     }
 }

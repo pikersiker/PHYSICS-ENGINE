@@ -33,6 +33,10 @@ public class Engine {
         return entities;
     }
 
+    public void clearDynamicEntities() {
+        entities.removeIf(e -> !e.rigidBody.isStatic());
+    }
+
     public void update() {
         final int SUBSTEPS = 8;
         final float subDelta = timeStep / SUBSTEPS;
