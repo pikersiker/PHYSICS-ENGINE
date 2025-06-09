@@ -17,7 +17,7 @@ public class RigidBody {
     private float moi;
     private float imoi;
 
-    private float restitution = 0.4f;
+    private float restitution = 0.5f;
     private float friction = 0.075f;
 
     private final boolean isStatic;

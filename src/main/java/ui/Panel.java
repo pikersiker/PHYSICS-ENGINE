@@ -12,6 +12,11 @@ public class Panel extends JPanel {
     private int offsetX;
     private int offsetY;
     private final Engine engine;
+    private int fps;
+
+    public void setFps(int fps) {
+        this.fps = fps;
+    }
 
     public Panel(Engine engine) {
         this.engine = engine;
@@ -86,5 +91,8 @@ public class Panel extends JPanel {
             }
             g2d.fillPolygon(xPoints, yPoints, 4);
         }
+        g2d.setTransform(new java.awt.geom.AffineTransform());
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("FPS: " + fps, 10, 20);
     }
 }

@@ -13,7 +13,7 @@ import physics.Resolver;
 public class Engine {
     private final List<Entity> entities = new ArrayList<>();
     private final ForceRegistry forceRegistry = new ForceRegistry();
-    private final Gravity gravity = new Gravity(new Vector2f(0, 1000f));
+    private final Gravity gravity = new Gravity(new Vector2f(0, 500f));
     private static final float timeStep = 1.0f / 60.0f;
 
     public Engine() {
