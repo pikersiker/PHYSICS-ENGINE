@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PHYSICS-ENGINE:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PHYSICS_ENGINE_jar</output-path>
+    <root id="archive" name="PHYSICS-ENGINE.jar">
+      <element id="module-output" name="PHYSICS-ENGINE" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/joml/joml/1.10.8/joml-1.10.8.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
