@@ -35,11 +35,9 @@ public class Panel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 Vector2f simPos = screenToSim(new Vector2f(e.getX(), e.getY()));
-
                 Entity newSquare = new Entity(simPos, 0f, new Vector2f(40, 40), false);
                 newSquare.updateOBB();
                 engine.addEntity(newSquare);
-
                 repaint();
             }
         });

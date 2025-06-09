@@ -48,6 +48,10 @@ public class RigidBody {
         return mass;
     }
 
+    public float getInverseMass() {
+        return inverseMass;
+    }
+
     public float getImoi() {
         return imoi;
     }

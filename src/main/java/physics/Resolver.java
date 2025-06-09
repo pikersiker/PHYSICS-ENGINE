@@ -12,8 +12,8 @@ public class Resolver {
         RigidBody B = b.rigidBody;
         if (A.isStatic() && B.isStatic()) return;
 
-        float invMassA = A.isStatic() ? 0f : 1f / A.getMass();
-        float invMassB = B.isStatic() ? 0f : 1f / B.getMass();
+        float invMassA = A.isStatic() ? 0f : A.getInverseMass();
+        float invMassB = B.isStatic() ? 0f : B.getInverseMass();
         float invMassSum = invMassA + invMassB;
         if (invMassSum == 0) return;
 
@@ -37,7 +37,7 @@ public class Resolver {
 
         float jt = -rv.dot(tangent) / invMassSum;
         float mu = (float) Math.sqrt(A.getFriction() * B.getFriction());
-        Vector2f frictionImpulse = new Vector2f(tangent).mul(Math.abs(jt) < j * mu ? jt : -j * mu);
+        Vector2f frictionImpulse = new Vector2f(tangent).mul(Math.abs(jt) < (j * mu) ? jt : (-j * mu));
 
         if (!A.isStatic()) {
             A.getVelocity().sub(new Vector2f(frictionImpulse).mul(invMassA));
